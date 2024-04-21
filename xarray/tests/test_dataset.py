@@ -5986,7 +5986,9 @@ class TestDataset:
 
     def test_dataset_diff_n1(self) -> None:
         ds = create_test_data(seed=1)
+        print("test1")
         actual = ds.diff("dim2")
+        print("test2")
         expected_dict = {}
         expected_dict["var1"] = DataArray(
             np.diff(ds["var1"].values, axis=1),
@@ -6021,6 +6023,11 @@ class TestDataset:
         expected = Dataset(expected_dict, coords={"time": ds["time"].values})
         expected.coords["numbers"] = ("dim3", ds["numbers"].values)
         assert_equal(expected, actual)
+
+    def test_dataset_diff_dim_nonexist(self) -> None:
+        ds = create_test_data(seed=1)
+        with pytest.raises(KeyError, match=r"dim provided not present"):
+            ds.diff("dim4")
 
     def test_dataset_diff_exception_n_neg(self) -> None:
         ds = create_test_data(seed=1)
